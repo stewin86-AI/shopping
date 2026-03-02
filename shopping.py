@@ -90,8 +90,6 @@ def load_data(filename):
                 data[i]['evidence'][j] = 1 if data[i]['evidence'][j] == 'Returning_Visitor' else 0
             if j == 16:                
                 data[i]['evidence'][j] = 1 if data[i]['evidence'][j] == "TRUE" else 0
-        mese = data[i]['evidence'][15]
-        #print(mese)
 
     # returning feature, target for element in csv file
     evidence, labels = [], []
@@ -148,8 +146,8 @@ def evaluate(y_test, predictions):
     prediction = model.predict(X_testing)
 
     """
-    #print(len(y_test))
-    #print(len(predictions))
+    print(y_test)
+    print(predictions)
 
 
     # Compute how well we performed
@@ -157,6 +155,8 @@ def evaluate(y_test, predictions):
     incorrect = 0 
     true_positive = 0
     true_negative = 0
+    false_positive = 0
+    false_negative = 0
     total = 0 
 
     for y_test, predictions in zip(y_test, predictions):
@@ -166,17 +166,20 @@ def evaluate(y_test, predictions):
             if y_test == 1: 
                 true_positive +=1
             if y_test == 0: 
-                true_negative +=1 
-
-
+                true_negative +=1
         else:
             incorrect += 1
+            if y_test == 1: 
+                false_negative +=1
+            if y_test == 0: 
+                false_positive +=1
+
     
-    print(total)
+    #print(total)
 
 
-    sensitivity = true_positive/total
-    specificity = true_negative/total 
+    sensitivity = true_positive/(true_positive+false_negative)
+    specificity = true_negative/(true_negative+false_positive) 
 
     return sensitivity, specificity
 
